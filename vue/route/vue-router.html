@@ -27,9 +27,9 @@
 	<div>
 		<h1>Home</h1>
 		<ul>
-			<li><router-link to="profile">个人页面</router-link></li>
-			<li><router-link to="buyed">已购商品</router-link></li>
-			<li><router-link to="sending">待发送商品</router-link></li>
+			<li><router-link to="/profile">个人页面</router-link></li>
+			<li><router-link to="/buyed">已购商品</router-link></li>
+			<li><router-link to="/sending">待发送商品</router-link></li>
 		</ul>
 		<ul>
 			<li>
@@ -178,7 +178,7 @@
 	}	
 	var router = new VueRouter({
 		model: 'history',
-		base: '/vue-router-test/vue/route/vue-router.html',
+		base: '/vue-router-test/vue/route/vue-router.html/',
 		routes: [{
 			path: '/buyed',
 			component: Buyed,
