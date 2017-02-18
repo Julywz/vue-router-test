@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		section {
+
+		}
+		ul {
+			list-style: none;
+		}
+		a {
+			text-decoration: none;
+		}
+	</style>
+</head>
+<body>
+	<section>
+		<div id="app"></div>
+	</section>
+</body>
+<script src="vue.js"></script>
+<script src="vue-router.js"></script>
+
+<script type="text/x-template" id="home">
+	<div>
+		<h1>Home</h1>
+		<ul>
+			<li><a href="#profile">个人页面</a></li>
+			<li><a href="#buyed">已购商品</a></li>
+			<li><a href="#sending">待发送商品</a></li>
+		</ul>
+		<ul>
+			<li>
+				<router-link to='/user/wufang'>wufang</router-link>
+				<router-link :to='"/user/" + userId'>{{ userId }}</router-link>
+				<router-link :to='{name: "user", params: { id: 1234 } }'>1234</router-link>
+			</li>
+		</ul>
+		<router-view></router-view>
+	</div>
+</script>
+<script type="text/x-template" id="profile">
+	<div>
+		<h2>个人页面</h2>
+		<ul>
+			<li><router-link :to='{name: "my-info"}'>个人信息</router-link></a></li>
+			<li><router-link to='/profile/my-address'>收货地址</router-link></a></li>
+		</ul>
+		<router-view name='main'></router-view>
+		<router-view name='side'></router-view>
+	</div>
+</script>
+<script type="text/x-template" id="my-info">
+	<div>
+		<ul>
+			<li>name: hello</li>
+			<li>gender: famel</li>
+			<li>age: 25</li>
+		</ul>
+	</div>
+</script>
+<script type="text/x-template" id="friends">
+	<div>
+		<h5>推荐好友:</h5>
+		<ul>
+			<li>靳向</li>
+			<li>在火星喝醉的星星</li>
+		</ul>
+	</div>
+</script>
+<script type="text/x-template" id="my-address">
+	<div>
+		<ul>
+			<li>杭州市下沙区</li>
+			<li>河南省邓州市</li>
+		</ul>
+	</div>
+</script>
+<script type="text/x-template" id="near-address">
+	<div>
+		<ul>
+			<li>下沙区三号大街和十号大街交叉口</li>
+		</ul>
+	</div>
+</script>
+<script type="text/x-template" id="buyed">
+	<div>
+		<h2>已购商品</h2>
+		<ul>
+			<li><router-link :to='{name: "reality"}'>实体商品</router-link></li>
+			<li><router-link to='/buyed/virtual'>虚拟商品</router-link></li>
+		</ul>
+		<router-view></router-view>
+	</div>
+</script>
+<script type="text/x-template" id="reality-goods">
+	<div>
+		<ul>
+			<li>手机</li>
+			<li>衣服</li>
+		</ul>
+	</div>
+</script>
+<script type="text/x-template" id="virtual-goods">
+	<div>
+		<li>话费充值</li>
+		<li>会员充值</li>
+	</div>
+</script>
+<script type="text/x-template" id="sending">
+	<div>
+		<h2>待发送商品</h2>
+		<ul>
+			<li>电脑</li>
+			<li>水果</li>
+		</ul>
+	</div>
+</script>
+<script type="text/x-template" id="user">
+	<div>
+		<h2>用户视图</h2>
+		<p>Welcome {{userId.id}}</p>
+	</div>
+</script>
+
+<script>
+
+	var Home = {
+		name: 'home',
+		template: '#home'
+	}
+	var Profile = {
+		name: 'profile',
+		template: '#profile' 
+	}
+	var myInfo = {
+		name: 'my-info',
+		template: '#my-info'
+	}
+	var Fridens ={
+		name: 'friends',
+		template: '#friends'
+	}
+	var myAddress = {
+		name: 'my-address',
+		template: '#my-address'
+	}
+	var nearAddress = {
+		name: 'near-address',
+		template: '#near-address'
+	}
+	var Buyed = {
+		name: 'buyed',
+		template: '#buyed'
+	}
+	var RealityGoods = {
+		name: 'reality-goods',
+		template: '#reality-goods'
+	}
+	var VirtualGoods = {
+		name: 'virtual-goods',
+		template: '#virtual-goods'
+	}
+	var Sending = {
+		name: 'sending',
+		template: '#sending'
+	}
+	var User = {
+		name: 'user',
+		template: '#user',
+		computed: {
+			userId() {
+				return this.$route.params
+			}
+		}
+	}	
+	var router = new VueRouter({
+		model: '',
+		base: ''
+		routes: [{
+			path: '/buyed',
+			component: Buyed,
+			children: [{
+				name: 'reality',
+				path: 'reality',
+				component: RealityGoods
+			}, {
+				path: 'virtual',
+				component: VirtualGoods
+			}]
+		},{
+			path: '/sending',
+			component: Sending 
+		}, {
+			path: '/profile',
+			component: Profile,
+			children: [{
+				name: 'my-info',
+				path: 'my-info',
+				components: {
+					main: myInfo, 
+					side: Fridens
+				}
+			}, {
+				path: 'my-address',
+				components: {
+					main: myAddress,
+					side: nearAddress
+				}
+			}]
+		},{
+			name: 'user',
+			path: '/user/:id',
+			component: User
+		}]
+	})
+	var app = new Vue({
+		el: '#app',
+		template: '#home',
+		router,
+		computed: {
+			userId() {
+				return parseInt(Math.random()*100)
+			}
+		}
+	})
+
+</script>
+</html>
